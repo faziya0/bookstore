@@ -33,21 +33,21 @@ public class BookstoreApplication {
 
 	@PostConstruct
 	public void init(){
-    User user=new User();
-    user.setName("Faziya");
-	user.setSurname("Huseynova");
-		user.setUsername("faziya0");
-		user.setEmail("faziya0@gmail.com");
+		User user=new User();
+		user.setName("Name1");
+		user.setSurname("Surname1");
+		user.setUsername("username1");
+		user.setEmail("name1@gmail.com");
 		String encode = passwordEncoder.encode("12345");
 		user.setPassword(encode);
 		List<Role> user1roles = Arrays.asList(Role.ROLE_USER);
 		user.setRole(user1roles);
 		userRepository.save(user);
 		User user2=new User();
-		user2.setName("Orkhan");
-		user2.setSurname("Safarov");
-		user2.setUsername("orkhan0");
-		user2.setEmail("orkhan0@gmail.com");
+		user2.setName("Name2");
+		user2.setSurname("Surname2");
+		user2.setUsername("username2");
+		user2.setEmail("name2@gmail.com");
 		String encode2 = passwordEncoder.encode("12345");
 		user2.setPassword(encode2);
 		List<Role> user2roles = Arrays.asList(Role.ROLE_PUBLISHER);
