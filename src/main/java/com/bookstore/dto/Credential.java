@@ -1,4 +1,4 @@
-package com.bookstore.auth;
+package com.bookstore.dto;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

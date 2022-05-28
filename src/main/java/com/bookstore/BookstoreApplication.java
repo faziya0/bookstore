@@ -1,35 +1,26 @@
 package com.bookstore;
 
-import com.bookstore.author.Author;
-import com.bookstore.author.AuthorRepository;
-import com.bookstore.book.Book;
-import com.bookstore.book.BookRepository;
 import com.bookstore.role.Role;
-import com.bookstore.user.User;
-import com.bookstore.user.UserRepository;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bookstore.entity.User;
+import com.bookstore.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
+@RequiredArgsConstructor
+
 public class BookstoreApplication {
-@Autowired
-	PasswordEncoder passwordEncoder;
-	@Autowired
-	BookRepository bookRepository;
-	@Autowired
-	UserRepository userRepository;
-	@Autowired
-	AuthorRepository authorRepository;
+
+private final PasswordEncoder passwordEncoder;
+	private final UserRepository userRepository;
+
 
 	@PostConstruct
 	public void init(){
@@ -53,28 +44,6 @@ public class BookstoreApplication {
 		List<Role> user2roles = Arrays.asList(Role.ROLE_PUBLISHER);
 		user2.setRole(user2roles);
 		userRepository.save(user2);
-		Author author = new Author();
-		author.setName("Fyodor");
-		author.setSurname("Dostoevsky");
-		authorRepository.save(author);
-		Author author2 = new Author();
-		author2.setName("Ismayil");
-		author2.setSurname("Sixli");
-		authorRepository.save(author2);
-		Book book = new Book();
-		book.setName("Deli Kur");
-		book.setType("roman");
-		book.setSize("400");
-		book.setUser(user2);
-		book.setAuthor(author2);
-		bookRepository.save(book);
-		Book book2 = new Book();
-		book2.setName("Idiot");
-		book2.setType("roman");
-		book2.setSize("1000");
-		book2.setUser(user2);
-		book2.setAuthor(author);
-		bookRepository.save(book2);
 
 
 	}

@@ -1,24 +1,24 @@
 package com.bookstore.auth;
 
 
+import com.bookstore.dto.Credential;
 import com.bookstore.exception.UnAuthorizeException;
 import com.bookstore.token.JwtTokenUtil;
-import com.bookstore.user.User;
-import com.bookstore.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bookstore.entity.User;
+import com.bookstore.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+
+   private final JwtTokenUtil jwtTokenUtil;
+   private final UserRepository userRepository;
+   private final PasswordEncoder passwordEncoder;
     public String auth(Credential credential){
         Optional<User> userDB = userRepository.findByUsername(credential.getUsername());
         if(!(userDB.isPresent())){

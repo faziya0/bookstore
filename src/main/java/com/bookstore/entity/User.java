@@ -1,9 +1,7 @@
-package com.bookstore.user;
+package com.bookstore.entity;
 
-import com.bookstore.book.Book;
 import com.bookstore.role.Role;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

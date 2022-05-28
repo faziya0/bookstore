@@ -1,7 +1,5 @@
-package com.bookstore.book;
+package com.bookstore.entity;
 
-import com.bookstore.author.Author;
-import com.bookstore.user.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,9 +13,11 @@ public class Book {
     private String name;
     private String type;
     private String size;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @Lob
+    private String description;
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Author author;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "publisher_id")
     private User user;
 }

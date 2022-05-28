@@ -1,4 +1,4 @@
-package com.bookstore.user;
+package com.bookstore.shared;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

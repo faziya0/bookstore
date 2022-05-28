@@ -1,18 +1,19 @@
-package com.bookstore.user;
+package com.bookstore.service;
 
-import com.bookstore.book.Book;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bookstore.entity.Book;
+import com.bookstore.entity.User;
+import com.bookstore.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
+   private final UserRepository userRepository;
     public Boolean isPublisher(String username){
         Optional<User> byUsername = userRepository.findByUsername(username);
         if((!byUsername.isPresent())){
