@@ -20,9 +20,15 @@ public class User implements UserDetails {
     private int id;
     private String name;
     private String surname;
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String password;
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+    @Column
+    private boolean enabled;
     @ElementCollection(targetClass = Role.class)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
@@ -60,6 +66,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+
+        return this.enabled;
     }
 }
