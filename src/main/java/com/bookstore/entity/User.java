@@ -20,9 +20,9 @@ public class User implements UserDetails {
     private int id;
     private String name;
     private String surname;
-    @Column(unique = true)
+    @Column
     private String username;
-    @Column(unique = true)
+    @Column
     private String email;
     private String password;
     @Column(name = "verification_code", length = 64)

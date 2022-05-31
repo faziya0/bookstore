@@ -1,9 +1,13 @@
-package com.bookstore.service;
+package com.bookstore.register;
 
+import com.bookstore.dto.UserDto;
 import com.bookstore.entity.User;
 import com.bookstore.repository.UserRepository;
+import com.bookstore.role.Role;
+import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,24 +15,25 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 @Service
+@RequiredArgsConstructor
 public class RegisterService {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JavaMailSender mailSender;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    @Qualifier("gmail")
+    private final JavaMailSender mailSender;
+    private final ModelMapper modelMapper;
 
 
-    public void register(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
+    public void register(UserDto userDto, String siteURL) throws MessagingException, UnsupportedEncodingException {
+        User user = modelMapper.map(userDto, User.class);
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
         user.setPassword(encodedPassword);
-
+        user.setRole(Arrays.asList(Role.ROLE_USER));
         String randomCode = RandomString.make(64);
         user.setVerificationCode(randomCode);
         user.setEnabled(false);
@@ -40,25 +45,23 @@ public class RegisterService {
 
     private void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
-        String fromAddress = "bookstore@gmail.com";
-        String senderName = "Bookstore company";
+        String fromAddress = "bookstoreregal@gmail.com";
+        String senderName = "Regal Bookstore";
         String subject = "Please verify your registration";
-        String content = "Dear"+toAddress+",<br>"
+        String content = "Dear "+user.getName()+",<br>"
                 + "Please click the link below to verify your registration:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                 + "Thank you,<br>"
-                + "Your company name.";
+                + "Regal Bookstore.";
+
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-
         helper.setFrom(fromAddress, senderName);
         helper.setTo(toAddress);
         helper.setSubject(subject);
 
-        content = content.replace("[[name]]", user.getName());
         String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
-
         content = content.replace("[[URL]]", verifyURL);
 
         helper.setText(content, true);
@@ -78,5 +81,9 @@ public class RegisterService {
             return true;
         }
 
+    }
+    public String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 }
