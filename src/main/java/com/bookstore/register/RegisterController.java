@@ -1,7 +1,6 @@
 package com.bookstore.register;
 
 import com.bookstore.dto.UserDto;
-import com.bookstore.register.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +15,9 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequiredArgsConstructor
 public class RegisterController {
-
     private final RegisterService registerService;
-
-
     @PostMapping("/register")
-    public String processRegister(@Valid @RequestBody UserDto userDto, HttpServletRequest request)
+    public String register(@Valid @RequestBody UserDto userDto, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         registerService.register(userDto, registerService.getSiteURL(request));
         return "You have signed up successfully! Please check your email to verify your account";

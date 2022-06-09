@@ -33,4 +33,10 @@ public class UserService {
     public Optional<User> findUser(Book book){
         return userRepository.findByBook(book);
     }
+    public Optional<User> getVerificationCode(String code){
+       return userRepository.findByVerificationCode(code);
+    }
+    public void save(User user){
+        userRepository.save(user);
+    }
 }

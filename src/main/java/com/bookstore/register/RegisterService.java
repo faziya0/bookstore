@@ -2,30 +2,28 @@ package com.bookstore.register;
 
 import com.bookstore.dto.UserDto;
 import com.bookstore.entity.User;
-import com.bookstore.repository.UserRepository;
 import com.bookstore.role.Role;
+import com.bookstore.service.MailService;
+import com.bookstore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RegisterService {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     @Qualifier("gmail")
-    private final JavaMailSender mailSender;
+    private final MailService mailService;
     private final ModelMapper modelMapper;
 
 
@@ -38,45 +36,18 @@ public class RegisterService {
         user.setVerificationCode(randomCode);
         user.setEnabled(false);
 
-        userRepository.save(user);
-
-        sendVerificationEmail(user, siteURL);
-    }
-
-    private void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
-        String toAddress = user.getEmail();
-        String fromAddress = "bookstoreregal@gmail.com";
-        String senderName = "Regal Bookstore";
-        String subject = "Please verify your registration";
-        String content = "Dear "+user.getName()+",<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
-                + "Regal Bookstore.";
-
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
-
-        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
-        content = content.replace("[[URL]]", verifyURL);
-
-        helper.setText(content, true);
-
-        mailSender.send(message);
+        userService.save(user);
+        mailService.sendVerificationEmail(user, siteURL);
     }
     public boolean verify(String verificationCode) {
-        User user = userRepository.findByVerificationCode(verificationCode);
+        Optional<User> user = userService.getVerificationCode(verificationCode);
 
-        if (user == null || user.isEnabled()) {
+        if (!(user.isPresent()) || user.get().isEnabled()) {
             return false;
         } else {
-            user.setVerificationCode(null);
-            user.setEnabled(true);
-            userRepository.save(user);
+            user.get().setVerificationCode(null);
+            user.get().setEnabled(true);
+            userService.save(user.get());
 
             return true;
         }
@@ -86,4 +57,6 @@ public class RegisterService {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }
+
+
 }
