@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil {
@@ -29,6 +28,7 @@ public class JwtTokenUtil {
         return generateToken(userDetails.getUsername(), claims);
         }
     private Claims getAllClaimsFromToken(String token) {
+
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
@@ -46,15 +46,15 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
     public Boolean validateToken(String token) {
-         String username = getUsernameFromToken(token);
-        if(username!=null && !isTokenExpired(token)){
+        String usernameFromToken = getUsernameFromToken(token);
+        if(usernameFromToken!=null && !isTokenExpired(token)){
             return true;
         }
         return false;
     }
     public List<Object> getAuthorities(String token){
         Claims allClaimsFromToken = getAllClaimsFromToken(token);
-        List<Object> authorities = (List<Object>)allClaimsFromToken.get("roles", Object.class);
-        return authorities;
+            List<Object> authorities = (List<Object>)allClaimsFromToken.get("roles", Object.class);
+            return authorities;
     }
         }

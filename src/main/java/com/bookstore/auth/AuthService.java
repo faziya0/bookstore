@@ -24,7 +24,10 @@ public class AuthService {
         if(!(userDB.isPresent())){
             throw  new UnAuthorizeException();
         }
-        else if(!(passwordEncoder.matches(credential.getPassword(), userDB.get().getPassword()) && !(userDB.get().isEnabled()))) {
+        else if(!(passwordEncoder.matches(credential.getPassword(), userDB.get().getPassword())))   {
+            throw  new UnAuthorizeException();
+        }
+        else if(!(userDB.get().isEnabled())){
             throw  new UnAuthorizeException();
         }
 

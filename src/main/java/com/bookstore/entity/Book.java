@@ -17,7 +17,7 @@ public class Book {
     private String description;
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Author author;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "publisher_id")
     private User user;
 }

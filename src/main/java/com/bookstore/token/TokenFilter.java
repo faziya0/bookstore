@@ -5,8 +5,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,10 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+
 
 public class TokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -31,8 +28,8 @@ public class TokenFilter extends OncePerRequestFilter {
             String token = authorization.substring(7);
             if(jwtTokenUtil.validateToken(token)){
                 String usernameFromToken = jwtTokenUtil.getUsernameFromToken(token);
-
                 List<Object> authorities = jwtTokenUtil.getAuthorities(token);
+
                 Principal principal = new Principal() {
                     @Override
                     public String getName() {
