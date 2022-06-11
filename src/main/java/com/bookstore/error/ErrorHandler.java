@@ -17,7 +17,7 @@ public class ErrorHandler implements ErrorController {
     DefaultErrorAttributes errorAttributes;
     @RequestMapping("/error")
     public ErrorResponse errorHandler(WebRequest webRequest){
-       Map<String,Object> attributes=this.errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE, ErrorAttributeOptions.Include.BINDING_ERRORS));
+       Map<String,Object> attributes=this.errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE, ErrorAttributeOptions.Include.BINDING_ERRORS, ErrorAttributeOptions.Include.EXCEPTION));
       String message=(String)attributes.get("message");
         String path=(String)attributes.get("path");
         Integer status=(Integer)attributes.get("status");

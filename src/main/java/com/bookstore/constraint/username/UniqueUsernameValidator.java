@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 @RequiredArgsConstructor
