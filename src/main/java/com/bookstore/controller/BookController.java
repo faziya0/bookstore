@@ -58,14 +58,16 @@ public class BookController {
     @PostMapping("/api/bookstore/books")
     public ResponseEntity<String> saveBook(@Valid @RequestBody BookDto bookDto, @CurrentUser Principal principal){
         Optional<User> user = userService.findUser(principal.getName());
-        bookService.saveBook(bookDto,user.get());
+        if(user.isPresent()){bookService.saveBook(bookDto,user.get());}
+       
+
     return ResponseEntity.ok("Book is saved successfully");
     }
     @PreAuthorize("@securityService.isAllowedEdit(#book,principal)")
     @PutMapping("/api/bookstore/books/{book}")
     public ResponseEntity<String> editBook(@Valid @RequestBody BookDto bookDto,@PathVariable String book){
         Optional<Book> bookInDB = bookService.findBook(book);
-          bookService.editBook(bookInDB.get(),bookDto);
+        if(bookInDB.isPresent()){bookService.editBook(bookInDB.get(),bookDto);}
           return ResponseEntity.ok("Book is edited successfully");
 
     }

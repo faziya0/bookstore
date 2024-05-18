@@ -8,4 +8,5 @@ import javax.validation.constraints.NotNull;
 public class AuthorDto {
     @NotNull
     private String fullName;
+
 }
